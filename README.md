@@ -39,6 +39,7 @@ Before you start, ensure you have these installed:
 4.  **The mcp library**
     
     *   Run pip install mcp\[cli\] in your terminal.
+    *   ```pip install mcp\[cli\]```
         
 
 📂 Project Structure
@@ -71,6 +72,8 @@ C:\Users\YOUR_NAME\RevitAI\
 ### Step 2: The Claude Server Script
 
 Create a file named server.py in your folder and paste this code. This is the "Silent Version" (fixes JSON errors).
+
+Python
 
 ```python
 
@@ -129,7 +132,8 @@ if __name__ == "__main__":
 2.  Create this folder hierarchy: MyAI.extension -> MyAI.tab -> Tools.panel -> RunAI.pushbutton.
     
 3.  Create a file script.py inside the RunAI.pushbutton folder:
-    
+
+Python    
 
 ```python
 
@@ -189,6 +193,7 @@ main()
     
 3.  Paste this (Update the paths!):
     
+JSON
 
 ```JSON
 
@@ -211,6 +216,9 @@ _Note: The -u flag is critical to prevent "Server Disconnected" errors._
 -------------
 
 1.  **Restart Claude:** Ensure the "Plug" icon 🔌 appears in the chat bar.
+    1.  Open Claude -> Settings -> Developer -> **Edit Config**.
+    2.  Ensure the config file is running.
+    3.  You may not need the Plug icon to appear in the chat bar, Claude will still be running with the MCP is the above steps are correct.
     
 2.  **Restart Revit:** You should see a "MyAI" tab with a "RunAI" button.
     
@@ -242,4 +250,4 @@ _Note: The -u flag is critical to prevent "Server Disconnected" errors._
 *   \[ \] **More Read Tools:** Add specific tools to read Sheet Lists, Family Types, and Materials.
     
 
-_Built with ❤️ using the Model Context Protocol._
+_Built with ❤️ using the Model Context Protocol for Revit._
