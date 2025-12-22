@@ -72,7 +72,7 @@ C:\Users\YOUR_NAME\RevitAI\
 
 Create a file named server.py in your folder and paste this code. This is the "Silent Version" (fixes JSON errors).
 
-Python
+```python
 
 # server.py
 from mcp.server.fastmcp import FastMCP
@@ -120,6 +120,7 @@ def read_revit_data(request_type: str) -> str:
 
 if __name__ == "__main__":
     mcp.run()
+```
 
 ### Step 3: The Revit Button (pyRevit)
 
@@ -130,9 +131,55 @@ if __name__ == "__main__":
 3.  Create a file script.py inside the RunAI.pushbutton folder:
     
 
-Python
+```python
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   # script.py (Runs inside Revit)  import os  import json  import clr  # Update this path manually to match your folder!  BRIDGE_FOLDER = r"C:\Users\YOUR_USERNAME\RevitAI"  BRIDGE_FILE = os.path.join(BRIDGE_FOLDER, "command.json")  RESPONSE_FILE = os.path.join(BRIDGE_FOLDER, "response.json")  doc = __revit__.ActiveUIDocument.Document  def main():      if not os.path.exists(BRIDGE_FILE):          return # No commands waiting      try:          with open(BRIDGE_FILE, 'r') as f:              data = json.load(f)      except:          return      response = {"status": "success", "data": ""}      try:          if data["type"] == "EXECUTE_CODE":              # Dangerous Magic: Execute the text as code              from Autodesk.Revit.DB import Transaction              exec(data["code"])               response["data"] = "Code executed successfully."          elif data["type"] == "READ_DATA":              if data["query"] == "get_project_info":                  response["data"] = {"Title": doc.Title, "Path": doc.PathName}              # Add more queries here!      except Exception as e:          response["status"] = "error"          response["data"] = str(e)      with open(RESPONSE_FILE, 'w') as f:          json.dump(response, f)      os.remove(BRIDGE_FILE)  main()   `
+# script.py (Runs inside Revit)
+import os
+import json
+import clr
+
+# Update this path manually to match your folder!
+BRIDGE_FOLDER = r"C:\Users\YOUR_USERNAME\RevitAI"
+BRIDGE_FILE = os.path.join(BRIDGE_FOLDER, "command.json")
+RESPONSE_FILE = os.path.join(BRIDGE_FOLDER, "response.json")
+
+doc = __revit__.ActiveUIDocument.Document
+
+def main():
+    if not os.path.exists(BRIDGE_FILE):
+        return # No commands waiting
+
+    try:
+        with open(BRIDGE_FILE, 'r') as f:
+            data = json.load(f)
+    except:
+        return
+
+    response = {"status": "success", "data": ""}
+
+    try:
+        if data["type"] == "EXECUTE_CODE":
+            # Dangerous Magic: Execute the text as code
+            from Autodesk.Revit.DB import Transaction
+            exec(data["code"]) 
+            response["data"] = "Code executed successfully."
+
+        elif data["type"] == "READ_DATA":
+            if data["query"] == "get_project_info":
+                response["data"] = {"Title": doc.Title, "Path": doc.PathName}
+            # Add more queries here!
+
+    except Exception as e:
+        response["status"] = "error"
+        response["data"] = str(e)
+
+    with open(RESPONSE_FILE, 'w') as f:
+        json.dump(response, f)
+    
+    os.remove(BRIDGE_FILE)
+
+main() 
+```
 
 ### Step 4: Configure Claude
 
@@ -143,9 +190,20 @@ Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQL
 3.  Paste this (Update the paths!):
     
 
-JSON
+```JSON
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   {    "mcpServers": {      "revit-agent": {        "command": "C:\\Path\\To\\python.exe",        "args": [          "-u",          "C:\\Users\\YOUR_USERNAME\\RevitAI\\server.py"        ]      }    }  }   `
+{
+  "mcpServers": {
+    "revit-agent": {
+      "command": "C:\\Path\\To\\python.exe",
+      "args": [
+        "-u",
+        "C:\\Users\\YOUR_USERNAME\\RevitAI\\server.py"
+      ]
+    }
+  }
+}
+```
 
 _Note: The -u flag is critical to prevent "Server Disconnected" errors._
 
@@ -168,7 +226,13 @@ _Note: The -u flag is critical to prevent "Server Disconnected" errors._
 🐛 Troubleshooting & "Gotchas"
 ------------------------------
 
-**Error MessageCauseSolution"Server disconnected"**Claude can't find Python or the script.Use the **Full Path** to python.exe in the config file. Add -u flag.**"Unexpected token 'W'..."**The server printed text ("Waiting...") which isn't JSON.Remove all print() statements from server.py.**Button doesn't work**command.json.txt double extension.Enable "File Extensions" in Windows View settings and rename properly.**Icon missing in Claude**JSON syntax error in config.Check for missing commas or single backslashes \\ (must be \\\\).
+| Error Message              | Cause                                                      | Solution                                                                 |
+|---------------------------|------------------------------------------------------------|--------------------------------------------------------------------------|
+| Server disconnected       | Claude can't find Python or the script.                    | Use the full path to `python.exe` in the config file. Add the `-u` flag. |
+| Unexpected token 'W'...   | The server printed text ("Waiting...") which isn't JSON.   | Remove all `print()` statements from `server.py`.                        |
+| Button doesn't work       | `command.json.txt` double extension.                       | Enable **File Extensions** in Windows View settings and rename properly. |
+| Icon missing in Claude    | JSON syntax error in config.                               | Check for missing commas or single backslashes `\` (must be `\\`).       |
+
 
 🔮 Future Roadmap
 -----------------
