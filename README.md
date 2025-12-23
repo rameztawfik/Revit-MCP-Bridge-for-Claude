@@ -244,6 +244,8 @@ _Note: The -u flag is critical to prevent "Server Disconnected" errors._
 🔮 Future Roadmap
 -----------------
 
+*   \[ \] **Facilitate the Creation of Construction elements:** Using CSV files to create construction elements directly to claude to overcome the tocken limits.
+
 *   \[ \] **Automated Listener:** Implement a generic IExternalEventHandler in Revit to listen for file changes automatically (removing the need to click the button).
     
 *   \[ \] **More Read Tools:** Add specific tools to read Sheet Lists, Family Types, and Materials.
