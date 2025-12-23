@@ -77,14 +77,13 @@ Python
 
 ```python
 
-# server.py
 from mcp.server.fastmcp import FastMCP
 import json
 import os
 import time
 
-# --- CONFIGURATION: UPDATE PATHS TO MATCH YOUR USERNAME ---
-USER_PATH = os.path.expanduser("~") # Gets C:\Users\YourName automatically
+# --- CONFIGURATION ---
+USER_PATH = os.path.expanduser("~") 
 BRIDGE_FILE = os.path.join(USER_PATH, "RevitAI", "command.json")
 RESPONSE_FILE = os.path.join(USER_PATH, "RevitAI", "response.json")
 
@@ -137,13 +136,13 @@ Python
 
 ```python
 
-# script.py (Runs inside Revit)
 import os
 import json
 import clr
 
 # Update this path manually to match your folder!
-BRIDGE_FOLDER = r"C:\Users\YOUR_USERNAME\RevitAI"
+
+BRIDGE_FOLDER = r"C:\Users\%user_name%\RevitAI"
 BRIDGE_FILE = os.path.join(BRIDGE_FOLDER, "command.json")
 RESPONSE_FILE = os.path.join(BRIDGE_FOLDER, "response.json")
 
@@ -164,7 +163,7 @@ def main():
     try:
         if data["type"] == "EXECUTE_CODE":
             # Dangerous Magic: Execute the text as code
-            from Autodesk.Revit.DB import Transaction
+            # Note: The AI must include its own imports (Transaction, etc.)
             exec(data["code"]) 
             response["data"] = "Code executed successfully."
 
@@ -182,7 +181,7 @@ def main():
     
     os.remove(BRIDGE_FILE)
 
-main() 
+main()
 ```
 
 ### Step 4: Configure Claude
@@ -215,10 +214,10 @@ _Note: The -u flag is critical to prevent "Server Disconnected" errors._
 🚦 How to Use
 -------------
 
-1.  **Restart Claude:** Ensure the "Plug" icon 🔌 appears in the chat bar.
+1.  **Restart Claude:** Ensure the "Plug" icon 🔌 appears in the chat bar. (if you do not see the Plug icon, go to the below steps)
     1.  Open Claude -> Settings -> Developer -> **Edit Config**.
     2.  Ensure the config file is running.
-    3.  You may not need the Plug icon to appear in the chat bar, Claude will still be running with the MCP is the above steps are correct.
+    3.  You may not need the Plug icon to appear in the chat bar, Claude will still be running with the MCP if the above steps are correct.
     
 2.  **Restart Revit:** You should see a "MyAI" tab with a "RunAI" button.
     
